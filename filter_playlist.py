@@ -33,7 +33,7 @@ def convert_to_m3u(filtered_lines, m3u_filename):
                 parts = line.split(',')
                 if len(parts) == 2:
                     channel_name, url = parts
-                    file.write(f"#EXTINF:-1 group-title='{current_group}',{channel_name}\n{url}\n")
+                    file.write(f"#EXTINF:-1 group-title=\"{current_group}\",{channel_name}\n{url}\n")
         print(f"Written {m3u_filename} successfully.")
 
 def main():

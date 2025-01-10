@@ -22,13 +22,27 @@ def save_to_file(filtered_lines, filename):
         for line in filtered_lines:
             file.write(line + '\n')
 
+def convert_to_m3u(filtered_lines, m3u_filename):
+    with open(m3u_filename, 'w', encoding='utf-8') as file:
+        file.write("#EXTM3U\n")
+        current_group = None
+        for line in filtered_lines:
+            if '#genre#' in line:
+                current_group = line.split(',')[0].strip()
+                file.write(f"#EXTINF:-1 group-title=\"{current_group}\",{current_group}\n")
+            else:
+                parts = line.split(',')
+                if len(parts) == 2:
+                    channel_name, url = parts
+                    file.write(f"#EXTINF:-1,{channel_name}\n{url}\n")
+
 def main():
     urls = [
         "http://wp.wadg.pro/down.php/d7b52d125998d00e2d2339bac6abd2b5.txt",
         # 这里可以继续添加更多链接
         # "http://example.com/another_playlist.txt"
     ]
-    target_groups = ['卫视频道①', '📡卫视频道','💞央视频道','央视频道①','韩国频道']
+    target_groups = ['💞央视频道', '🇨🇳｜央视频道', '💝央视频道', '央视频道', '📡卫视频道', '📡｜️卫视频道']
     all_filtered_lines = []
 
     for url in urls:
@@ -37,6 +51,7 @@ def main():
         all_filtered_lines.extend(filtered_lines)
 
     save_to_file(all_filtered_lines, 'filtered_playlist.txt')
+    convert_to_m3u(all_filtered_lines, 'filtered_playlist.m3u')
 
 if __name__ == "__main__":
     main()

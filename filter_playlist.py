@@ -17,7 +17,9 @@ def filter_groups(playlist, target_groups):
     for line in lines:
         if '#genre#' in line:
             current_group = clean_group_name(line.split(',')[0].strip())
-        if current_group in target_groups:
+            if current_group in target_groups:
+                filtered_lines.append(line)
+        elif current_group in target_groups:
             filtered_lines.append(line)
 
     return filtered_lines

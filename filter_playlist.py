@@ -17,7 +17,7 @@ def filter_groups(playlist, target_groups):
     for line in lines:
         if '#genre#' in line:
             current_group = clean_group_name(line.split(',')[0].strip())
-        elif current_group in target_groups:
+        if current_group in target_groups:
             filtered_lines.append(line)
 
     return filtered_lines
@@ -33,7 +33,7 @@ def main():
         # 这里可以继续添加更多链接
         # "http://example.com/another_playlist.txt"
     ]
-    target_groups = ['央视频道','卫视频道', '韩国频道']
+    target_groups = ['分组2', '分组3']
     all_filtered_lines = []
 
     for url in urls:

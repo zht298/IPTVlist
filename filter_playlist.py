@@ -28,7 +28,7 @@ def main():
         # 这里可以继续添加更多链接
         # "http://example.com/another_playlist.txt"
     ]
-    target_groups = ['央视频道', '卫视频道']
+    target_groups = ['卫视频道①', '📡卫视频道','💞央视频道','央视频道①','韩国频道']
     all_filtered_lines = []
 
     for url in urls:

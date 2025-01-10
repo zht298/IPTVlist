@@ -28,12 +28,20 @@ def save_to_file(filtered_lines, filename):
             file.write(line + '\n')
 
 def main():
-    url = "http://wp.wadg.pro/down.php/d7b52d125998d00e2d2339bac6abd2b5.txt"
-    target_groups = ['分组2', '分组3']
+    urls = [
+        "http://wp.wadg.pro/down.php/d7b52d125998d00e2d2339bac6abd2b5.txt",
+        # 这里可以继续添加更多链接
+        # "http://example.com/another_playlist.txt"
+    ]
+    target_groups = ['央视频道','卫视频道', '韩国频道']
+    all_filtered_lines = []
 
-    playlist = fetch_playlist(url)
-    filtered_lines = filter_groups(playlist, target_groups)
-    save_to_file(filtered_lines, 'filtered_playlist.txt')
+    for url in urls:
+        playlist = fetch_playlist(url)
+        filtered_lines = filter_groups(playlist, target_groups)
+        all_filtered_lines.extend(filtered_lines)
+
+    save_to_file(all_filtered_lines, 'filtered_playlist.txt')
 
 if __name__ == "__main__":
     main()

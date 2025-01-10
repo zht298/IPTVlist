@@ -14,14 +14,19 @@ def filter_groups(playlist, target_groups):
     current_group = None
     lines = playlist.splitlines()
 
+    print("Starting filtering process...")
+
     for line in lines:
         if '#genre#' in line:
             current_group = clean_group_name(line.split(',')[0].strip())
+            print(f"Found group: {current_group}")
             if current_group in target_groups:
+                print(f"Adding group: {current_group}")
                 filtered_lines.append(line)
         elif current_group in target_groups:
             filtered_lines.append(line)
 
+    print("Filtering process completed.")
     return filtered_lines
 
 def save_to_file(filtered_lines, filename):

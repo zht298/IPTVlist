@@ -5,6 +5,9 @@ on:
     - cron: '0 3 * * *'  # 每天北京时间上午11点运行
   workflow_dispatch:  # 允许手动触发
 
+permissions:
+  contents: write
+
 jobs:
   filter-playlist:
     runs-on: ubuntu-latest
@@ -24,12 +27,16 @@ jobs:
     - name: Run filter_playlist script
       run: python filter_playlist.py
 
-    - name: Commit and push results
-      env:
-        PAT: ${{ secrets.PAT }}
+    - name: Commit and push if changed
       run: |
         git config --global user.name "zht298"
         git config --global user.email "zht19886@gmail.com"
         git pull origin main  # 先拉取远程更改
         git add filtered_playlist.txt
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Update filtered_playlist.txt with available URLs" && git push https://${PAT}@github.com/zht298/IPTVlist.git HEAD:main)
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Update filtered_playlist.txt with available URLs" && git push)
+
+    - name: Upload filtered playlist
+      uses: actions/upload-artifact@v3
+      with:
+        name: filtered-playlist
+        path: filtered_playlist.txt

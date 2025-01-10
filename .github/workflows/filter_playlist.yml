@@ -1,0 +1,33 @@
+name: Filter Playlist
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # 每天北京时间上午11点运行
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  filter-playlist:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install requests library
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Run filter_playlist script
+      run: python filter_playlist.py
+
+    - name: Commit and push results
+      run: |
+        git config --global user.name "zht298"
+        git config --global user.email "zht19886@gmail.com"
+        git pull origin main  # 先拉取远程更改
+        git add filtered_playlist.txt
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Update filtered playlist" && git push)

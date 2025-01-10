@@ -6,7 +6,7 @@ def fetch_playlist(url):
     return response.text
 
 def clean_group_name(group_name):
-    # 只保留中文、英文、数字和下划线
+    # 去掉所有非中文、英文、数字和下划线的字符
     return re.sub(r'[^\w\u4e00-\u9fa5]', '', group_name)
 
 def filter_groups(playlist, target_groups):

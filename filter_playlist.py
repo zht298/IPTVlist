@@ -25,14 +25,15 @@ def save_to_file(filtered_lines, filename):
 def convert_to_m3u(filtered_lines, m3u_filename):
     with open(m3u_filename, 'w', encoding='utf-8') as file:
         file.write("#EXTM3U\n")
+        current_group = None
         for line in filtered_lines:
             if '#genre#' in line:
-                file.write(f"{line}\n")
+                current_group = line.split(',')[0].strip()
             else:
                 parts = line.split(',')
                 if len(parts) == 2:
                     channel_name, url = parts
-                    file.write(f"#EXTINF:-1,{channel_name}\n{url}\n")
+                    file.write(f"#EXTINF:-1 group-title='{current_group}',{channel_name}\n{url}\n")
         print(f"Written {m3u_filename} successfully.")
 
 def main():

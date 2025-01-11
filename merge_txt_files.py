@@ -17,8 +17,8 @@ def merge_txt_files(file_list, output_filename):
 
 def main():
     txt_urls = [
-        "https://example.com/file1.txt",
-        "https://example.com/file2.txt",
+        "https://raw.githubusercontent.com/zht298/IPTVlist/refs/heads/main/playlist.txt",
+        "https://github.com/zht298/IPTVlist/blob/main/chs.txt",
         # 添加更多的链接
     ]
     local_filenames = []

@@ -12,11 +12,15 @@ def parse_m3u_content(m3u_content):
 
     for line in lines:
         if line.startswith("#EXTINF"):
-            parts = line.split('group-title="')
-            group_info = parts[1].split('"', 1)
-            group_name = group_info[0]
-            channel_info = group_info[1].split(',', 1)
-            channel_name = channel_info[1]
+            try:
+                parts = line.split('group-title="')
+                group_info = parts[1].split('"', 1)
+                group_name = group_info[0]
+                channel_info = group_info[1].split(',', 1)
+                channel_name = channel_info[1]
+            except IndexError:
+                print(f"Skipping malformed line: {line}")
+                continue
         elif not line.startswith("#"):
             if current_group != group_name:
                 playlist.append([group_name, "#genre#"])
@@ -40,8 +44,8 @@ def process_m3u_urls(m3u_urls):
 
 def main():
     m3u_urls = [
-        "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u",
-        "http://adultiptv.net/chs.m3u",
+        "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist1.m3u",
+        "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist2.m3u",
         # 添加更多的链接
     ]
     process_m3u_urls(m3u_urls)

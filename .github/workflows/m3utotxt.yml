@@ -34,11 +34,11 @@ jobs:
         git config --global user.name "zht298"
         git config --global user.email "zht19886@gmail.com"
         git pull origin main  # 先拉取远程更改
-        git add playlist.txt  # 确保添加正确的文件名
+        git add *.txt  # 确保添加所有生成的 txt 文件
         git diff --quiet && git diff --staged --quiet || (git commit -m "Update playlist with available URLs" && git push)
 
     - name: Upload filtered playlist
       uses: actions/upload-artifact@v4
       with:
         name: filtered-playlist
-        path: playlist.txt
+        path: "*.txt"

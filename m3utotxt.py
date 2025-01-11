@@ -1,47 +1,44 @@
-name: M3U to TXT
+import requests
+import os
 
-on:
-  schedule:
-    - cron: '0 3 * * *'  # 每天北京时间上午11点运行
-  workflow_dispatch:  # 允许手动触发
+# 下载m3u文件
+url = "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u"
+response = requests.get(url)
+m3u_content = response.text
 
-permissions:
-  contents: write
+# 获取文件名
+m3u_filename = url.split("/")[-1]
+txt_filename = m3u_filename.replace('.m3u', '.txt')
 
-jobs:
-  m3utotxt:
-    runs-on: ubuntu-24.04  # 提前更新到 ubuntu-24.04
-    steps:
-    - uses: actions/checkout@v3
+# 解析m3u文件内容
+lines = m3u_content.splitlines()
+playlist = []
+current_group = None
 
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.x'
+for line in lines:
+    if line.startswith("#EXTINF"):
+        parts = line.split('group-title="')
+        group_info = parts[1].split('"', 1)
+        group_name = group_info[0]
+        channel_info = group_info[1].split(',', 1)
+        channel_name = channel_info[1]
+    elif not line.startswith("#"):
+        if current_group != group_name:
+            playlist.append([group_name, "#genre#"])
+            current_group = group_name
+        playlist.append([channel_name, line])
 
-    - name: Install requests library
-      run: |
-        python -m pip install --upgrade pip
-        pip install requests
+# 保存为txt文件，文件名取自m3u文件名
+try:
+    with open(txt_filename, mode='w', encoding='utf-8') as file:
+        for item in playlist:
+            file.write(f"{item[0]},{item[1]}\n")
+    print(f"文件 {txt_filename} 已成功创建并写入内容。")
+except Exception as e:
+    print(f"写入文件时出错: {e}")
 
-    - name: Run m3utotxt script
-      run: python m3utotxt.py
-
-    - name: Commit and push if changed
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        git config --global user.name "zht298"
-        git config --global user.email "zht19886@gmail.com"
-        git pull origin main  # 先拉取远程更改
-        git add playlist.txt  # 确保添加正确的文件名
-        if ! git diff --quiet; then
-          git commit -m "Update playlist with available URLs"
-          git push origin main
-        fi
-
-    - name: Upload filtered playlist
-      uses: actions/upload-artifact@v4
-      with:
-        name: filtered-playlist
-        path: "*.txt"
+# 验证文件是否成功写入
+if os.path.exists(txt_filename):
+    print(f"文件 {txt_filename} 存在。")
+else:
+    print(f"文件 {txt_filename} 不存在。")

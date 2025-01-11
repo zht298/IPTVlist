@@ -1,5 +1,5 @@
 import requests
-from urllib.parse import urlparse, parse_qs, urlunparse
+from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 
 def download_m3u_file(url):
     response = requests.get(url)
@@ -61,7 +61,8 @@ def process_m3u_urls(m3u_urls):
         # If no group is specified in the URL, add the default group
         if 'group' not in query_params:
             query_params['group'] = [url_info.get('default_group', 'default')]
-            parsed_url = parsed_url._replace(query=urlunparse(query_params))
+            query_string = urlencode(query_params, doseq=True)
+            parsed_url = parsed_url._replace(query=query_string)
             url = urlunparse(parsed_url)
 
         # 下载 M3U 文件内容（忽略 URL 中的查询参数）

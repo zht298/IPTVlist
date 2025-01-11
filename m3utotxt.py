@@ -1,4 +1,5 @@
 import requests
+import os
 
 # 下载m3u文件
 url = "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u"
@@ -28,6 +29,16 @@ for line in lines:
         playlist.append([channel_name, line])
 
 # 保存为txt文件，文件名取自m3u文件名
-with open(txt_filename, mode='w', encoding='utf-8') as file:
-    for item in playlist:
-        file.write(f"{item[0]},{item[1]}\n")
+try:
+    with open(txt_filename, mode='w', encoding='utf-8') as file:
+        for item in playlist:
+            file.write(f"{item[0]},{item[1]}\n")
+    print(f"文件 {txt_filename} 已成功创建并写入内容。")
+except Exception as e:
+    print(f"写入文件时出错: {e}")
+
+# 验证文件是否成功写入
+if os.path.exists(txt_filename):
+    print(f"文件 {txt_filename} 存在。")
+else:
+    print(f"文件 {txt_filename} 不存在。")

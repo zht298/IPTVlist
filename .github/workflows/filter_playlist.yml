@@ -1,4 +1,4 @@
-name: Filter Playlist
+name: 过滤播放列表
 
 on:
   schedule:
@@ -11,22 +11,29 @@ permissions:
 jobs:
   filter-playlist:
     runs-on: ubuntu-latest
+
     steps:
+    # 检出代码库
     - uses: actions/checkout@v2
 
-    - name: Set up Python
+    # 设置 Python 环境
+    - name: 设置 Python 环境
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
 
-    - name: Install requests library
+    # 安装 requests 库
+    - name: 安装 requests 库
       run: |
         python -m pip install --upgrade pip
         pip install requests
-    - name: Run filter_playlist script
+
+    # 运行过滤播放列表脚本
+    - name: 运行过滤播放列表脚本
       run: python filter_playlist.py
 
-    - name: Commit and push if changed
+    # 提交并推送更改（如果有更改）
+    - name: 提交并推送更改
       run: |
         git config --global user.name "zht298"
         git config --global user.email "zht19886@gmail.com"
@@ -34,13 +41,16 @@ jobs:
         git add filtered_playlist.txt
         git add filtered_playlist.m3u
         git diff --quiet && git diff --staged --quiet || (git commit -m "Update filtered_playlist with available URLs" && git push)
-    - name: Upload filtered playlist
+
+    # 上传过滤后的播放列表
+    - name: 上传过滤后的播放列表
       uses: actions/upload-artifact@v4
       with:
         name: filtered-playlist
         path: filtered_playlist.txt
 
-    - name: Upload filtered playlist in M3U format
+    # 以 M3U 格式上传过滤后的播放列表
+    - name: 以 M3U 格式上传过滤后的播放列表
       uses: actions/upload-artifact@v4
       with:
         name: filtered-playlist-m3u

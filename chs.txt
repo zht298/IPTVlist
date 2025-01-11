@@ -1,5 +1,5 @@
 直播,#genre#
-MyCamTV Teen Girls     ,http://live.mycamtv.com/teen.m3u8
+MyCamTV Teen Girls,http://live.mycamtv.com/teen.m3u8
 MyCamTV MILF,http://live.mycamtv.com/milf.m3u8
 MyCamTV Young Girls,http://live.mycamtv.com/young.m3u8
 MyCamTV Mature,http://live.mycamtv.com/bigtits.m3u8

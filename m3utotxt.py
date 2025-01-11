@@ -77,7 +77,7 @@ def main():
     m3u_urls = [
         {
             "url": "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u",
-            #"rename_groups": {"💞央视频道": "央视"},
+            "rename_groups": {"💞央视频道": "央视"},
         },
         {
             "url": "http://adultiptv.net/chs.m3u",

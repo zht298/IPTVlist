@@ -37,6 +37,6 @@ jobs:
         git config --global user.name "zht298"
         git config --global user.email "zht19886@gmail.com"
         git pull origin main  # 先拉取远程更改
-        git add merged_output.txt
+        git add merged_output.txt file1.txt file2.txt  # 添加所有需要跟踪的文件
         git commit -m "Add merged output TXT file"
         git push

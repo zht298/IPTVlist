@@ -25,6 +25,9 @@ def parse_m3u_content(m3u_content, default_group_name, rename_channels=None, ren
                     channel_name = parts[1].strip()
                     group_name = current_group
                 
+                # Debugging print statements
+                print(f"Original channel name: '{channel_name}'")
+                
                 # Rename groups if specified
                 if rename_groups and group_name in rename_groups:
                     group_name = rename_groups[group_name]
@@ -32,6 +35,9 @@ def parse_m3u_content(m3u_content, default_group_name, rename_channels=None, ren
                 # Rename channels if specified
                 if rename_channels and channel_name in rename_channels:
                     channel_name = rename_channels[channel_name]
+                
+                # Debugging print statements
+                print(f"Renamed channel name: '{channel_name}'")
 
             except IndexError:
                 print(f"Skipping malformed line: {line}")

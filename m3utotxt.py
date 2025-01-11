@@ -1,44 +1,46 @@
-name: M3U to TXT
+import requests
+import os
 
-on:
-  schedule:
-    - cron: '0 3 * * *'  # 每天北京时间上午11点运行
-  workflow_dispatch:  # 允许手动触发
+def download_m3u_file(url):
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.text
 
-permissions:
-  contents: write
+def parse_m3u_content(m3u_content):
+    lines = m3u_content.splitlines()
+    playlist = []
+    current_group = None
 
-jobs:
-  m3utotxt:
-    runs-on: ubuntu-24.04  # 提前更新到 ubuntu-24.04
-    steps:
-    - uses: actions/checkout@v3
+    for line in lines:
+        if line.startswith("#EXTINF"):
+            parts = line.split('group-title="')
+            group_info = parts[1].split('"', 1)
+            group_name = group_info[0]
+            channel_info = group_info[1].split(',', 1)
+            channel_name = channel_info[1]
+        elif not line.startswith("#"):
+            if current_group != group_name:
+                playlist.append([group_name, "#genre#"])
+                current_group = group_name
+            playlist.append([channel_name, line])
+    
+    return playlist
 
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.x'
+def save_playlist_to_txt(playlist, txt_filename):
+    with open(txt_filename, mode='w', encoding='utf-8') as file:
+        for item in playlist:
+            file.write(f"{item[0]},{item[1]}\n")
 
-    - name: Install requests library
-      run: |
-        python -m pip install --upgrade pip
-        pip install requests
+def main():
+    url = "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u"
+    m3u_content = download_m3u_file(url)
+    
+    # 获取文件名
+    m3u_filename = url.split("/")[-1]
+    txt_filename = m3u_filename.replace('.m3u', '.txt')
+    
+    playlist = parse_m3u_content(m3u_content)
+    save_playlist_to_txt(playlist, txt_filename)
 
-    - name: Run m3utotxt script
-      run: python m3utotxt.py
-
-    - name: Commit and push if changed
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        git config --global user.name "zht298"
-        git config --global user.email "zht19886@gmail.com"
-        git pull origin main  # 先拉取远程更改
-        git add *.txt  # 确保添加所有生成的 txt 文件
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Update playlist with available URLs" && git push)
-
-    - name: Upload filtered playlist
-      uses: actions/upload-artifact@v4
-      with:
-        name: filtered-playlist
-        path: "*.txt"
+if __name__ == "__main__":
+    main()

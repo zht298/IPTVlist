@@ -77,12 +77,12 @@ def main():
     m3u_urls = [
         {
             "url": "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u",
-            "rename_groups": {"💞央视频道": "央视"},
+            #"rename_groups": {"💞央视频道": "央视"},
         },
         {
             "url": "http://adultiptv.net/chs.m3u",
-            "default_group": "直播",
-            "rename_groups": {"xxx": "点播"},
+            "default_group": "成人直播_9",
+            "rename_groups": {"xxx": "成人点播_9"},
         },
         # 添加更多的链接，并在URL中指定自定义频道分组名称
     ]

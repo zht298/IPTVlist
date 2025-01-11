@@ -2,11 +2,13 @@ import requests
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 
 def download_m3u_file(url):
+    """从URL下载M3U文件内容。"""
     response = requests.get(url)
     response.raise_for_status()
     return response.text
 
 def parse_m3u_content(m3u_content, default_group_name, rename_groups=None):
+    """解析M3U文件内容，并返回包含频道信息的播放列表。"""
     lines = m3u_content.splitlines()
     playlist = []
     current_group = default_group_name
@@ -25,12 +27,12 @@ def parse_m3u_content(m3u_content, default_group_name, rename_groups=None):
                     channel_name = parts[1].strip()
                     group_name = current_group
                 
-                # Rename groups if specified
+                # 如果指定了重命名分组，则重命名分组
                 if rename_groups and group_name in rename_groups:
                     group_name = rename_groups[group_name]
 
             except IndexError:
-                print(f"Skipping malformed line: {line}")
+                print(f"跳过格式错误的行: {line}")
                 continue
         elif not line.startswith("#"):
             playlist.append([group_name, channel_name, line.strip()])
@@ -38,6 +40,7 @@ def parse_m3u_content(m3u_content, default_group_name, rename_groups=None):
     return playlist
 
 def save_playlist_to_txt(playlist, txt_filename):
+    """将播放列表保存到TXT文件中。"""
     with open(txt_filename, mode='w', encoding='utf-8') as file:
         current_group = None
         for item in playlist:
@@ -48,13 +51,14 @@ def save_playlist_to_txt(playlist, txt_filename):
             file.write(f"{channel_name},{link}\n")
 
 def process_m3u_urls(m3u_urls):
+    """处理一组M3U URL，下载并解析每个M3U文件，并将结果保存为TXT文件。"""
     for url_info in m3u_urls:
         url = url_info['url']
         parsed_url = urlparse(url)
         query_params = parse_qs(parsed_url.query)
         default_group_name = query_params.get('group', [url_info.get('default_group', 'default')])[0]
         
-        # If no group is specified in the URL, add the default group
+        # 如果URL中未指定分组，则添加默认分组
         if 'group' not in query_params:
             query_params['group'] = [url_info.get('default_group', 'default')]
             query_string = urlencode(query_params, doseq=True)
@@ -74,6 +78,7 @@ def process_m3u_urls(m3u_urls):
         save_playlist_to_txt(playlist, txt_filename)
 
 def main():
+    """主函数，定义M3U URL并处理它们。"""
     m3u_urls = [
         {
             "url": "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u",

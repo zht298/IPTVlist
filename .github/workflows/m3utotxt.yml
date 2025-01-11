@@ -1,0 +1,42 @@
+name: M3U to TXT
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # 每天北京时间上午11点运行
+  workflow_dispatch:  # 允许手动触发
+
+permissions:
+  contents: write
+
+jobs:
+  m3utotxt:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install requests library
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Run m3utotxt script
+      run: python m3utotxt.py
+
+    - name: Commit and push if changed
+      run: |
+        git config --global user.name "zht298"
+        git config --global user.email "zht19886@gmail.com"
+        git pull origin main  # 先拉取远程更改
+        git add *.txt
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Update filtered_playlist with available URLs" && git push)
+
+    - name: Upload filtered playlist
+      uses: actions/upload-artifact@v4
+      with:
+        name: filtered-playlist
+        path: *.txt

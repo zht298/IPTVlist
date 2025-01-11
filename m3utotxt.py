@@ -34,8 +34,13 @@ def parse_m3u_content(m3u_content, default_group_name):
 
 def save_playlist_to_txt(playlist, txt_filename):
     with open(txt_filename, mode='w', encoding='utf-8') as file:
+        current_group = None
         for item in playlist:
-            file.write(f"{item[0]},{item[1]},{item[2]}\n")
+            group_name, channel_name, link = item
+            if group_name != current_group:
+                file.write(f"{group_name},#genre#\n")
+                current_group = group_name
+            file.write(f"{channel_name},{link}\n")
 
 def process_m3u_urls(m3u_urls):
     for url in m3u_urls:

@@ -41,7 +41,6 @@ def main():
     
     playlist = parse_m3u_content(m3u_content)
     save_playlist_to_txt(playlist, txt_filename)
-    print(f"文件 {txt_filename} 已成功创建并写入内容。")
 
 if __name__ == "__main__":
     main()

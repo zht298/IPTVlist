@@ -28,12 +28,12 @@ jobs:
 
     - name: Run download and merge script
       run: |
-        python main.py
+        python merge_txt_files.py
 
     - name: Commit and push changes
       run: |
-        git config --global user.name 'github-actions'
-        git config --global user.email 'github-actions@github.com'
+        git config --global user.name 'zht298'
+        git config --global user.email 'zht19886@gmail.com'
         git add merged_output.txt
         git commit -m 'Add merged output TXT file'
         git push

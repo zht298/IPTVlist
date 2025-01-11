@@ -44,8 +44,8 @@ def process_m3u_urls(m3u_urls):
 
 def main():
     m3u_urls = [
-        "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist1.m3u",
-        "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist2.m3u",
+        "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u",
+        "http://adultiptv.net/chs.m3u",
         # 添加更多的链接
     ]
     process_m3u_urls(m3u_urls)

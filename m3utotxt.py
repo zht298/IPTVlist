@@ -7,9 +7,9 @@ def download_m3u_file(url):
     response.raise_for_status()
     return response.text
 
-def parse_m3u_content(m3u_content, default_group_name, rename_groups=None):
+def parse_m3u_content(m3u_content, default_group_name, rename_groups=None, rename_channel=None):
     """解析M3U文件内容，并返回包含频道信息的播放列表。"""
-    lines = m3u_content.splitlines()
+    lines = [line for line in m3u_content.splitlines() if line.strip()]  # 删除所有空行
     playlist = []
     current_group = default_group_name
 
@@ -30,6 +30,12 @@ def parse_m3u_content(m3u_content, default_group_name, rename_groups=None):
                 # 如果指定了重命名分组，则重命名分组
                 if rename_groups and group_name in rename_groups:
                     group_name = rename_groups[group_name]
+
+                # 如果指定了重命名频道，则重命名频道
+                if rename_channel:
+                    for old_name, new_name in rename_channel.items():
+                        if old_name in channel_name:
+                            channel_name = channel_name.replace(old_name, new_name)
 
             except IndexError:
                 print(f"跳过格式错误的行: {line}")
@@ -73,7 +79,8 @@ def process_m3u_urls(m3u_urls):
         playlist = parse_m3u_content(
             m3u_content, 
             default_group_name, 
-            rename_groups=url_info.get('rename_groups')
+            rename_groups=url_info.get('rename_groups'),
+            rename_channel=url_info.get('rename_channel')
         )
         save_playlist_to_txt(playlist, txt_filename)
 
@@ -83,11 +90,13 @@ def main():
         {
             "url": "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u",
             # "rename_groups": {"💞央视频道": "央视"},
+            # "rename_channel": {"CCTV1 综合": " 综合"},
         },
         {
             "url": "http://adultiptv.net/chs.m3u",
-            "default_group": "成人直播_9",
-            "rename_groups": {"XXX": "成人点播_9"},
+            "default_group": "直播_9",
+            "rename_groups": {"XXX": "点播_9"},
+            "rename_channel": {"MyCamTV ": ""},
         },
         # 添加更多的链接，并在URL中指定自定义频道分组名称
     ]

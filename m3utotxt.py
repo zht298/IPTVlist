@@ -1,5 +1,4 @@
 import requests
-import os
 
 def download_m3u_file(url):
     response = requests.get(url)
@@ -31,16 +30,21 @@ def save_playlist_to_txt(playlist, txt_filename):
         for item in playlist:
             file.write(f"{item[0]},{item[1]}\n")
 
+def process_m3u_urls(m3u_urls):
+    for url in m3u_urls:
+        m3u_content = download_m3u_file(url)
+        m3u_filename = url.split("/")[-1]
+        txt_filename = m3u_filename.replace('.m3u', '.txt')
+        playlist = parse_m3u_content(m3u_content)
+        save_playlist_to_txt(playlist, txt_filename)
+
 def main():
-    url = "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u"
-    m3u_content = download_m3u_file(url)
-    
-    # 获取文件名
-    m3u_filename = url.split("/")[-1]
-    txt_filename = m3u_filename.replace('.m3u', '.txt')
-    
-    playlist = parse_m3u_content(m3u_content)
-    save_playlist_to_txt(playlist, txt_filename)
+    m3u_urls = [
+        "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist1.m3u",
+        "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist2.m3u",
+        # 添加更多的链接
+    ]
+    process_m3u_urls(m3u_urls)
 
 if __name__ == "__main__":
     main()

@@ -1,7 +1,7 @@
 import requests
 
 # 下载m3u文件
-url = "https://raw.githubusercontent.com/zht298/IPTVlist/refs/heads/main/playlist.m3u"
+url = "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u"
 response = requests.get(url)
 m3u_content = response.text
 

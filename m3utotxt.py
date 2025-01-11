@@ -17,12 +17,12 @@ def parse_m3u_content(m3u_content, default_group_name, rename_channels=None, ren
                 if 'group-title="' in line:
                     parts = line.split('group-title="')
                     group_info = parts[1].split('"', 1)
-                    group_name = group_info[0]
+                    group_name = group_info[0].strip()
                     channel_info = group_info[1].split(',', 1)
-                    channel_name = channel_info[1]
+                    channel_name = channel_info[1].strip()
                 else:
                     parts = line.split(',', 1)
-                    channel_name = parts[1]
+                    channel_name = parts[1].strip()
                     group_name = current_group
                 
                 # Rename groups if specified
@@ -37,7 +37,7 @@ def parse_m3u_content(m3u_content, default_group_name, rename_channels=None, ren
                 print(f"Skipping malformed line: {line}")
                 continue
         elif not line.startswith("#"):
-            playlist.append([group_name, channel_name, line])
+            playlist.append([group_name, channel_name, line.strip()])
     
     return playlist
 

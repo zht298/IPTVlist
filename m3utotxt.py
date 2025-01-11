@@ -6,7 +6,7 @@ def download_m3u_file(url):
     response.raise_for_status()
     return response.text
 
-def parse_m3u_content(m3u_content, default_group_name, rename_channels=None, rename_groups=None):
+def parse_m3u_content(m3u_content, default_group_name, rename_groups=None):
     lines = m3u_content.splitlines()
     playlist = []
     current_group = default_group_name
@@ -25,19 +25,9 @@ def parse_m3u_content(m3u_content, default_group_name, rename_channels=None, ren
                     channel_name = parts[1].strip()
                     group_name = current_group
                 
-                # Debugging print statements
-                print(f"Original channel name: '{channel_name}'")
-                
                 # Rename groups if specified
                 if rename_groups and group_name in rename_groups:
                     group_name = rename_groups[group_name]
-                
-                # Rename channels if specified
-                if rename_channels and channel_name in rename_channels:
-                    channel_name = rename_channels[channel_name]
-                
-                # Debugging print statements
-                print(f"Renamed channel name: '{channel_name}'")
 
             except IndexError:
                 print(f"Skipping malformed line: {line}")
@@ -79,7 +69,6 @@ def process_m3u_urls(m3u_urls):
         playlist = parse_m3u_content(
             m3u_content, 
             default_group_name, 
-            rename_channels=url_info.get('rename_channels'),
             rename_groups=url_info.get('rename_groups')
         )
         save_playlist_to_txt(playlist, txt_filename)
@@ -88,7 +77,7 @@ def main():
     m3u_urls = [
         {
             "url": "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u",
-            "rename_channels": {"💞央视频道": "央视"},
+            "rename_groups": {"💞央视频道": "央视"},
         },
         {
             "url": "http://adultiptv.net/chs.m3u",

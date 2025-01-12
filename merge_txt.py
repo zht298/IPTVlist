@@ -56,7 +56,7 @@ def main():
     # 步骤2：合并TXT文件并过滤
     output_filename = "merged_output.txt"
     max_channels_per_group = 10  # 设置每个分组内最多保留的频道数量
-    exclude_groups = ["公告"]  # 要过滤掉的分组
+    exclude_groups = ["公告", "广东频道", "少儿频道", "港·澳·台", "影视频道"]  # 要过滤掉的分组
     merge_txt_files(local_filenames, output_filename, max_channels_per_group, exclude_groups)
     print(f"已合并文件到：{output_filename}")
 

@@ -6,10 +6,15 @@ from collections import defaultdict
 
 def download_txt_file(url, filename):
     """从URL下载TXT文件并保存在本地。"""
-    response = requests.get(url)
-    response.raise_for_status()
-    with open(filename, 'w', encoding='utf-8') as file:
-        file.write(response.text)
+    try:
+        response = requests.get(url, verify=False)  # 绕过 SSL 验证
+        response.raise_for_status()
+        with open(filename, 'w', encoding='utf-8') as file:
+            file.write(response.text)
+    except requests.exceptions.SSLError as e:
+        print(f"SSL 错误：{e}")
+    except requests.exceptions.RequestException as e:
+        print(f"请求错误：{e}")
 
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""

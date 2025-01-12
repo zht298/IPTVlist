@@ -29,16 +29,6 @@ def download_txt_file(url, filename):
             time.sleep(3)
     print(f"无法下载文件：{url}")
 
-def print_file_content(filename):
-    """按utf-8编码打开文件并打印内容。"""
-    try:
-        with open(filename, 'r', encoding='utf-8') as file:
-            content = file.read()
-            print(f"文件 {filename} 的内容：")
-            print(content)
-    except UnicodeDecodeError as e:
-        print(f"Unicode decode error: {e}")
-
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""
     group_dict = defaultdict(lambda: defaultdict(list))
@@ -46,7 +36,6 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
 
     for filename, groups in file_list:
         print(f"正在处理文件: {filename}")
-        print_file_content(filename)  # 打印文件内容以确认编码
         with open(filename, 'r', encoding='utf-8', errors='ignore') as infile:
             current_group = None
             for line in infile:
@@ -55,21 +44,18 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                 parts = line.split(',')
                 if len(parts) == 2 and parts[1].startswith('#genre#'):
                     current_group = parts[0].strip()
-                    print(f"找到分组: {current_group}")  # 添加调试打印
                 elif current_group and len(parts) == 2:
                     channel_name, link = parts[0].strip(), parts[1].strip()
                     if not ipv6_pattern.search(link) and (groups is None or current_group.lower() in [g.lower() for g in groups]):  # 过滤掉IPv6链接和非指定分组
                         group_dict[current_group][channel_name].append(link)
-                        print(f"添加频道: {channel_name} 链接: {link} 到分组: {current_group}")  # 添加调试打印
 
     with open(output_filename, 'w', encoding='utf-8') as outfile:
         for group, channels in group_dict.items():
             outfile.write(f"{group},#genre#\n")
-            print(f"写入分组: {group},#genre#")  # 添加调试打印
+            print(f"写入分组: {group}")  # 打印写入到文件中的分组名称
             for channel_name, links in channels.items():
                 for link in links[:max_channels_per_name]:
                     outfile.write(f"{channel_name},{link}\n")
-                    print(f"写入频道: {channel_name}, 链接: {link}")  # 添加调试打印
 
 def git_add_files(files, user_name, user_email):
     """将文件添加到Git版本控制中。"""

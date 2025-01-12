@@ -99,8 +99,8 @@ def main():
         },
         {
             "url": "http://adultiptv.net/chs.m3u",
-            "default_group": "直播_9",
-            "rename_groups": {"XXX": "点播_9"},
+            "default_group": "成人直播_9",
+            "rename_groups": {"XXX": "成人点播_9"},
             "rename_channel1": {"MyCamTV ": ""},
             "rename_channel2": {"AdultIPTV.net ": ""},
         },

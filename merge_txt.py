@@ -31,7 +31,6 @@ def download_txt_file(url, filename):
 
 def normalize_text(text):
     """标准化文本以进行比较。"""
-    # 将文本标准化为NFKC形式，并转换为小写
     return unicodedata.normalize('NFKC', text).lower()
 
 def merge_txt_files(file_list, output_filename, max_channels_per_name):

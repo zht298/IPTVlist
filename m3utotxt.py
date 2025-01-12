@@ -1,3 +1,4 @@
+# m3u格式转txt，按m3u文件名写出txt，可处理多个链接，并在每个链接中添加组名、更改组名、更改频道名称
 import requests
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 

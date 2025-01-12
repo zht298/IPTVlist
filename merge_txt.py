@@ -1,6 +1,5 @@
 import requests
 import re
-import unicodedata
 from collections import defaultdict
 import warnings
 import time
@@ -13,25 +12,18 @@ def download_txt_file(url, filename):
     retries = 3
     for attempt in range(retries):
         try:
-            print(f"正在尝试下载文件: {url} (尝试次数: {attempt + 1})")
             response = requests.get(url, verify=False)  # 绕过 SSL 验证
             response.raise_for_status()
             with open(filename, 'wb') as file:
                 file.write(response.content)
-            print(f"成功下载文件: {url}")
             return
         except requests.exceptions.SSLError as e:
             print(f"SSL 错误：{e}")
         except requests.exceptions.RequestException as e:
             print(f"请求错误：{e}")
         if attempt < retries - 1:
-            print("等待3秒后重试...")
             time.sleep(3)
     print(f"无法下载文件：{url}")
-
-def normalize_text(text):
-    """标准化文本以进行比较。"""
-    return unicodedata.normalize('NFKC', text).casefold()
 
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""
@@ -39,7 +31,6 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
     ipv6_pattern = re.compile(r'([a-f0-9:]+:+)+[a-f0-9]+')
 
     for filename, groups in file_list:
-        print(f"正在处理文件: {filename}")
         with open(filename, 'r', encoding='utf-8', errors='ignore') as infile:
             current_group = None
             for line in infile:
@@ -48,40 +39,32 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                 parts = line.split(',')
                 if len(parts) == 2 and parts[1].startswith('#genre#'):
                     current_group = parts[0].strip()
-                    normalized_current_group = normalize_text(current_group)
-                    print(f"找到分组: {current_group}")
-                    print(f"标准化后的分组: {normalized_current_group}")
                 elif current_group and len(parts) == 2:
                     channel_name, link = parts[0].strip(), parts[1].strip()
                     if not ipv6_pattern.search(link):
-                        matched = False
-                        for g in groups:
-                            normalized_g = normalize_text(g)
-                            print(f"标准化后的比较分组: {normalized_g}")
-                            if normalized_current_group == normalized_g:
-                                group_dict[current_group][channel_name].append(link)
-                                print(f"添加频道: {channel_name} 链接: {link} 到分组: {current_group}")
-                                matched = True
-                                break
-                        if not matched:
-                            print(f"未能匹配分组: {current_group} 对应的标准化分组: {normalized_current_group}")
-
-    print("合并后的分组名称：")
-    for group in group_dict.keys():
-        print(f"合并分组: {group}")
+                        if groups is None or current_group in groups:
+                            group_dict[current_group][channel_name].append(link)
 
     with open(output_filename, 'w', encoding='utf-8') as outfile:
         for group, channels in group_dict.items():
             outfile.write(f"{group},#genre#\n")
-            print(f"写入分组: {group}")  # 打印写入到文件中的分组名称
             for channel_name, links in channels.items():
                 for link in links[:max_channels_per_name]:
                     outfile.write(f"{channel_name},{link}\n")
-                    print(f"写入频道: {channel_name}, 链接: {link}")
 
 def main():
     txt_urls_with_groups = [
-        ("https://ygbh.site/bh.txt", ["💝中国移动ITV👉移动","💝汕头央卫👉广东","焦点香港"]),  # 保留所有分组
+        ("https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.txt", ["央视频道", "卫视频道","影视频道"]),
+        # 出处 月光宝盒抓取直播
+        ("https://ygbh.site/bh.txt", ["💝中国移动ITV👉移动","💝汕头央卫👉广东"]),  # 保留所有分组
+        # 小苹果，蜗牛线路[测试2]
+        ("http://wp.wadg.pro/down.php/d7b52d125998d00e2d2339bac6abd2b5.txt", ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道","韩国频道"]),      
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", None),  # 保留所有分组  大连台
+        # 出处 小鹦鹉等多处获取 
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),  # 保留所有分组  JJ斗地主
+        # 出处 https://adultiptv.net/→http://adultiptv.net/chs.m3u
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt",None),  # 保留所有分组
+        ("https://ygbh.site/bh.txt", ["💝中国移动ITV👉移动", "💝汕头央卫👉广东", "焦点香港", "💝咪咕频道👉全网", "💝云南有线频道👉全网"]),  # 保留所有分组
     ]
     local_filenames_with_groups = []
 

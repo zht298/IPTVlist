@@ -48,23 +48,23 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                 parts = line.split(',')
                 if len(parts) == 2 and parts[1].startswith('#genre#'):
                     current_group = parts[0].strip()
+                    normalized_current_group = normalize_text(current_group)
                     print(f"找到分组: {current_group}")
-                    print(f"标准化后的分组: {normalize_text(current_group)}")
+                    print(f"标准化后的分组: {normalized_current_group}")
                 elif current_group and len(parts) == 2:
                     channel_name, link = parts[0].strip(), parts[1].strip()
-                    normalized_group = normalize_text(current_group)
                     if not ipv6_pattern.search(link):
-                        if groups is None:
-                            group_dict[current_group][channel_name].append(link)
-                            print(f"添加频道: {channel_name} 链接: {link} 到分组: {current_group}")
-                        else:
-                            for g in groups:
-                                normalized_g = normalize_text(g)
-                                print(f"标准化后的比较分组: {normalized_g}")
-                                if normalized_group == normalized_g:
-                                    group_dict[current_group][channel_name].append(link)
-                                    print(f"添加频道: {channel_name} 链接: {link} 到分组: {current_group}")
-                                    break
+                        matched = False
+                        for g in groups:
+                            normalized_g = normalize_text(g)
+                            print(f"标准化后的比较分组: {normalized_g}")
+                            if normalized_current_group == normalized_g:
+                                group_dict[current_group][channel_name].append(link)
+                                print(f"添加频道: {channel_name} 链接: {link} 到分组: {current_group}")
+                                matched = True
+                                break
+                        if not matched:
+                            print(f"未能匹配分组: {current_group} 对应的标准化分组: {normalized_current_group}")
 
     print("合并后的分组名称：")
     for group in group_dict.keys():

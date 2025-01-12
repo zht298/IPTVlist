@@ -39,7 +39,5 @@ jobs:
         git config --global user.name "zht298"
         git config --global user.email "zht19886@gmail.com"
         git pull origin main  # 先拉取远程更改
-        git add merged_output.txt file1.txt file2.txt file3.txt file4.txt file5.txt file6.txt  # 添加所有需要跟踪的文件
-        git status  # 打印当前的 Git 状态
-        git commit -m "Add merged output TXT file" || echo "No changes to commit"  # 如果没有更改则打印信息
-        git push origin main  # 推送到远程仓库
+        git add merged_output.txt  # 确保添加生成的 txt 文件
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Update filtered_playlist with available URLs" && git push)

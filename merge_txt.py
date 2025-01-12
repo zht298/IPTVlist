@@ -13,10 +13,12 @@ def download_txt_file(url, filename):
     retries = 3
     for attempt in range(retries):
         try:
+            print(f"正在尝试下载文件: {url} (尝试次数: {attempt + 1})")
             response = requests.get(url, verify=False)  # 绕过 SSL 验证
             response.raise_for_status()
             with open(filename, 'w', encoding='utf-8') as file:
                 file.write(response.text)
+            print(f"成功下载文件: {url}")
             return
         except requests.exceptions.SSLError as e:
             print(f"SSL 错误：{e}")
@@ -33,6 +35,7 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
     ipv6_pattern = re.compile(r'([a-f0-9:]+:+)+[a-f0-9]+')
 
     for filename, groups in file_list:
+        print(f"正在处理文件: {filename}")
         with open(filename, 'r', encoding='utf-8') as infile:
             current_group = None
             for line in infile:

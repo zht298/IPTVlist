@@ -31,7 +31,8 @@ def download_txt_file(url, filename):
 
 def normalize_text(text):
     """标准化文本以进行比较。"""
-    return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('ascii').lower()
+    # 将文本标准化为NFKC形式，并转换为小写
+    return unicodedata.normalize('NFKC', text).lower()
 
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""

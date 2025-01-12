@@ -1,3 +1,4 @@
+# 叠加多个txt视频文件，只取ipv4链接，每个分组保留指定频道数
 import requests
 
 def download_txt_file(url, filename):

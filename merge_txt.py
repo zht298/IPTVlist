@@ -65,9 +65,11 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
     with open(output_filename, 'w', encoding='utf-8') as outfile:
         for group, channels in group_dict.items():
             outfile.write(f"{group},#genre#\n")
+            print(f"写入分组: {group},#genre#")  # 添加调试打印
             for channel_name, links in channels.items():
                 for link in links[:max_channels_per_name]:
                     outfile.write(f"{channel_name},{link}\n")
+                    print(f"写入频道: {channel_name}, 链接: {link}")  # 添加调试打印
 
 def git_add_files(files, user_name, user_email):
     """将文件添加到Git版本控制中。"""

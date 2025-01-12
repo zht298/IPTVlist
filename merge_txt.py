@@ -4,7 +4,7 @@ from collections import defaultdict
 import subprocess
 import warnings
 import time
-import chardet
+import chardet  # 确保导入 chardet
 
 # 禁用未验证的HTTPS请求警告
 warnings.filterwarnings('ignore', message='Unverified HTTPS request')

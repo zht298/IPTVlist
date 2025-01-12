@@ -29,12 +29,15 @@ def download_txt_file(url, filename):
             time.sleep(3)
     print(f"无法下载文件：{url}")
 
-def convert_encoding_to_utf8(filename):
-    """将文件从GB2312编码转换为UTF-8编码。"""
-    with open(filename, 'r', encoding='gb2312', errors='ignore') as file:
-        content = file.read()
-    with open(filename, 'w', encoding='utf-8', errors='ignore') as file:
-        file.write(content)
+def print_file_content(filename):
+    """按utf-8编码打开文件并打印内容。"""
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            content = file.read()
+            print(f"文件 {filename} 的内容：")
+            print(content)
+    except UnicodeDecodeError as e:
+        print(f"Unicode decode error: {e}")
 
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""
@@ -43,7 +46,7 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
 
     for filename, groups in file_list:
         print(f"正在处理文件: {filename}")
-        convert_encoding_to_utf8(filename)  # 转换文件编码为UTF-8
+        print_file_content(filename)  # 打印文件内容以确认编码
         with open(filename, 'r', encoding='utf-8', errors='ignore') as infile:
             current_group = None
             for line in infile:

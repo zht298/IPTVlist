@@ -29,20 +29,6 @@ def download_txt_file(url, filename):
             time.sleep(3)
     print(f"无法下载文件：{url}")
 
-def print_group_names(filename):
-    """按utf-8编码打开文件并打印分组名称。"""
-    try:
-        with open(filename, 'r', encoding='utf-8') as file:
-            current_group = None
-            print(f"文件 {filename} 的分组名称：")
-            for line in file:
-                parts = line.split(',')
-                if len(parts) == 2 and parts[1].startswith('#genre#'):
-                    current_group = parts[0].strip()
-                    print(f"找到分组: {current_group}")
-    except UnicodeDecodeError as e:
-        print(f"Unicode decode error: {e}")
-
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""
     group_dict = defaultdict(lambda: defaultdict(list))
@@ -50,7 +36,6 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
 
     for filename, groups in file_list:
         print(f"正在处理文件: {filename}")
-        print_group_names(filename)  # 打印文件内容中的分组名称
         with open(filename, 'r', encoding='utf-8', errors='ignore') as infile:
             current_group = None
             for line in infile:

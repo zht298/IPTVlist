@@ -36,7 +36,7 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
 
     for filename, groups in file_list:
         print(f"正在处理文件: {filename}")
-        with open(filename, 'r', encoding='utf-8') as infile:
+        with open(filename, 'r', encoding='utf-8', errors='ignore') as infile:
             current_group = None
             for line in infile:
                 if line.startswith("#") or not line.strip():

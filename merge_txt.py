@@ -1,11 +1,13 @@
-# 叠加多个txt视频文件，过滤掉ipv6链接，按每个链接需求保留需要的分组，每个分组相同频道保留指定频道数
-
 import requests
 import re
 from collections import defaultdict
 import os
 import subprocess
+import warnings
 import time
+
+# 禁用未验证的HTTPS请求警告
+warnings.filterwarnings('ignore', message='Unverified HTTPS request')
 
 def download_txt_file(url, filename):
     """从URL下载TXT文件并保存在本地。"""
@@ -52,8 +54,12 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                 for link in links[:max_channels_per_name]:
                     outfile.write(f"{channel_name},{link}\n")
 
-def git_add_files(files):
+def git_add_files(files, user_name, user_email):
     """将文件添加到Git版本控制中。"""
+    # 设置用户信息
+    subprocess.run(["git", "config", "--global", "user.name", user_name])
+    subprocess.run(["git", "config", "--global", "user.email", user_email])
+    
     for file in files:
         subprocess.run(["git", "add", file])
     subprocess.run(["git", "commit", "-m", "Add new downloaded files"])
@@ -86,7 +92,9 @@ def main():
     merge_txt_files(local_filenames_with_groups, output_filename, max_channels_per_name)
 
     # 步骤3：添加文件到Git版本控制中
-    git_add_files([f"file{i}.txt" for i in range(1, len(txt_urls_with_groups) + 1)])
+    user_name = "zht298"
+    user_email = "zht19886@gmail.com"
+    git_add_files([f"file{i}.txt" for i in range(1, len(txt_urls_with_groups) + 1)], user_name, user_email)
 
 if __name__ == "__main__":
     main()

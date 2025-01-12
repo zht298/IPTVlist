@@ -4,6 +4,7 @@ from collections import defaultdict
 import subprocess
 import warnings
 import time
+import chardet
 
 # 禁用未验证的HTTPS请求警告
 warnings.filterwarnings('ignore', message='Unverified HTTPS request')
@@ -16,8 +17,8 @@ def download_txt_file(url, filename):
             print(f"正在尝试下载文件: {url} (尝试次数: {attempt + 1})")
             response = requests.get(url, verify=False)  # 绕过 SSL 验证
             response.raise_for_status()
-            with open(filename, 'w', encoding='utf-8') as file:
-                file.write(response.text)
+            with open(filename, 'wb') as file:
+                file.write(response.content)
             print(f"成功下载文件: {url}")
             return
         except requests.exceptions.SSLError as e:
@@ -29,6 +30,15 @@ def download_txt_file(url, filename):
             time.sleep(3)
     print(f"无法下载文件：{url}")
 
+def detect_encoding(file_path):
+    with open(file_path, 'rb') as file:
+        raw_data = file.read()
+        result = chardet.detect(raw_data)
+        encoding = result['encoding']
+        confidence = result['confidence']
+        print(f"检测到的编码: {encoding}, 置信度: {confidence}")
+        return encoding
+
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""
     group_dict = defaultdict(lambda: defaultdict(list))
@@ -36,7 +46,8 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
 
     for filename, groups in file_list:
         print(f"正在处理文件: {filename}")
-        with open(filename, 'r', encoding='utf-8', errors='ignore') as infile:
+        encoding = detect_encoding(filename)
+        with open(filename, 'r', encoding=encoding, errors='ignore') as infile:
             current_group = None
             for line in infile:
                 if line.startswith("#") or not line.strip():

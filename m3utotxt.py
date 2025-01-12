@@ -76,11 +76,16 @@ def process_m3u_urls(m3u_urls):
         m3u_filename = parsed_url.path.split("/")[-1]
         txt_filename = m3u_filename.replace('.m3u', '.txt')
         
+        # 合并重命名频道的字典
+        rename_channel = url_info.get('rename_channel', {})
+        rename_channel.update(url_info.get('rename_channel1', {}))
+        rename_channel.update(url_info.get('rename_channel2', {}))
+
         playlist = parse_m3u_content(
             m3u_content, 
             default_group_name, 
             rename_groups=url_info.get('rename_groups'),
-            rename_channel=url_info.get('rename_channel')
+            rename_channel=rename_channel
         )
         save_playlist_to_txt(playlist, txt_filename)
 
@@ -96,7 +101,8 @@ def main():
             "url": "http://adultiptv.net/chs.m3u",
             "default_group": "直播_9",
             "rename_groups": {"XXX": "点播_9"},
-            "rename_channel": {"MyCamTV ": ""},
+            "rename_channel1": {"MyCamTV ": ""},
+            "rename_channel2": {"AdultIPTV.net ": ""},
         },
         # 添加更多的链接，并在URL中指定自定义频道分组名称
     ]

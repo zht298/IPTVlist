@@ -49,12 +49,22 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                 if len(parts) == 2 and parts[1].startswith('#genre#'):
                     current_group = parts[0].strip()
                     print(f"找到分组: {current_group}")
+                    print(f"标准化后的分组: {normalize_text(current_group)}")
                 elif current_group and len(parts) == 2:
                     channel_name, link = parts[0].strip(), parts[1].strip()
                     normalized_group = normalize_text(current_group)
-                    if not ipv6_pattern.search(link) and (groups is None or any(normalize_text(g) == normalized_group for g in groups)):  # 过滤掉IPv6链接和非指定分组
-                        group_dict[current_group][channel_name].append(link)
-                        print(f"添加频道: {channel_name} 链接: {link} 到分组: {current_group}")
+                    if not ipv6_pattern.search(link):
+                        if groups is None:
+                            group_dict[current_group][channel_name].append(link)
+                            print(f"添加频道: {channel_name} 链接: {link} 到分组: {current_group}")
+                        else:
+                            for g in groups:
+                                normalized_g = normalize_text(g)
+                                print(f"标准化后的比较分组: {normalized_g}")
+                                if normalized_group == normalized_g:
+                                    group_dict[current_group][channel_name].append(link)
+                                    print(f"添加频道: {channel_name} 链接: {link} 到分组: {current_group}")
+                                    break
 
     print("合并后的分组名称：")
     for group in group_dict.keys():

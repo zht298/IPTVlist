@@ -33,9 +33,10 @@ def merge_txt_files(file_list, output_filename, max_channels_per_group, exclude_
 
     with open(output_filename, 'w', encoding='utf-8') as outfile:
         for group, channels in group_dict.items():
-            outfile.write(f"{group},#genre#\n")
-            for channel_name, link in channels[:max_channels_per_group]:
-                outfile.write(f"{channel_name},{link}\n")
+            if group not in exclude_groups:  # 再次检查排除的分组
+                outfile.write(f"{group},#genre#\n")
+                for channel_name, link in channels[:max_channels_per_group]:
+                    outfile.write(f"{channel_name},{link}\n")
 
 def main():
     txt_urls = [

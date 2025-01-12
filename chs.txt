@@ -1,4 +1,4 @@
-直播_9,#genre#
+成人直播_9,#genre#
 Teen Girls,http://live.mycamtv.com/teen.m3u8
 MILF,http://live.mycamtv.com/milf.m3u8
 Young Girls,http://live.mycamtv.com/young.m3u8
@@ -17,7 +17,7 @@ Big Tits Girls,http://live.mycamtv.com/bigtits.m3u8
 Skinny Girls,http://live.mycamtv.com/skinny.m3u8
 Medium Girls,http://live.mycamtv.com/medium.m3u8
 Blowjob,http://live.mycamtv.com/blowjob.m3u8
-点播_9,#genre#
+成人点播_9,#genre#
 Live Cams,http://cdn.adultiptv.net/livecams.m3u8
 MILF,http://cdn.adultiptv.net/milf.m3u8
 Big Dick,http://cdn.adultiptv.net/bigdick.m3u8

@@ -3,6 +3,8 @@
 import requests
 import re
 from collections import defaultdict
+import os
+import subprocess
 
 def download_txt_file(url, filename):
     """从URL下载TXT文件并保存在本地。"""
@@ -42,6 +44,12 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                 for link in links[:max_channels_per_name]:
                     outfile.write(f"{channel_name},{link}\n")
 
+def git_add_files(files):
+    """将文件添加到Git版本控制中。"""
+    for file in files:
+        subprocess.run(["git", "add", file])
+    subprocess.run(["git", "commit", "-m", "Add new downloaded files"])
+
 def main():
     txt_urls_with_groups = [
         ("https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.txt", ["央视频道", "卫视频道","影视频道"]),
@@ -68,6 +76,9 @@ def main():
     output_filename = "merged_output.txt"
     max_channels_per_name = 10  # 设置每个频道名称最多保留的项数量
     merge_txt_files(local_filenames_with_groups, output_filename, max_channels_per_name)
+
+    # 步骤3：添加文件到Git版本控制中
+    git_add_files([f"file{i}.txt" for i in range(1, len(txt_urls_with_groups) + 1)])
 
 if __name__ == "__main__":
     main()

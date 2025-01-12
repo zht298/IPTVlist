@@ -44,10 +44,12 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                 parts = line.split(',')
                 if len(parts) == 2 and parts[1].startswith('#genre#'):
                     current_group = parts[0]
+                    print(f"找到分组: {current_group}")  # 添加调试打印
                 elif current_group and len(parts) == 2:
                     channel_name, link = parts[0], parts[1].strip()
                     if not ipv6_pattern.search(link) and (groups is None or current_group in groups):  # 过滤掉IPv6链接和非指定分组
                         group_dict[current_group][channel_name].append(link)
+                        print(f"添加频道: {channel_name} 链接: {link} 到分组: {current_group}")  # 添加调试打印
 
     with open(output_filename, 'w', encoding='utf-8') as outfile:
         for group, channels in group_dict.items():

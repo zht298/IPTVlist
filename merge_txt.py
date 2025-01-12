@@ -40,9 +40,12 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
 def main():
     txt_urls_with_groups = [
         ("https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.txt", ["央视频道", "卫视频道","影视频道"]),
-        # ("", None),  # 保留所有分组
-        ("https://raw.githubusercontent.com/chuzjie/wuihui/refs/heads/main/%E5%B0%8F%E7%B1%B3/DSJ240101.txt", ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道","韩国频道"]),      
+        # 出处 月光宝盒抓取直播
+        ("https://ygbh.site/bh.txt", ["💝中国移动ITV👉移动"]),  # 保留所有分组
+        ("https://raw.githubusercontent.com/chuzjie/wuihui/main/%E5%B0%8F%E7%B1%B3/DSJ240101.txt", ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道","韩国频道"]),      
+        # 出处 小鹦鹉等多处获取 
         ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),  # 保留所有分组
+        # 出处 https://adultiptv.net/→http://adultiptv.net/chs.m3u
         ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt",None),  # 保留所有分组
         # 添加更多的链接和对应的分组
     ]

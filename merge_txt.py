@@ -4,7 +4,6 @@ from collections import defaultdict
 import subprocess
 import warnings
 import time
-import chardet  # 确保导入 chardet
 
 # 禁用未验证的HTTPS请求警告
 warnings.filterwarnings('ignore', message='Unverified HTTPS request')
@@ -30,14 +29,12 @@ def download_txt_file(url, filename):
             time.sleep(3)
     print(f"无法下载文件：{url}")
 
-def detect_encoding(file_path):
-    with open(file_path, 'rb') as file:
-        raw_data = file.read()
-        result = chardet.detect(raw_data)
-        encoding = result['encoding']
-        confidence = result['confidence']
-        print(f"检测到的编码: {encoding}, 置信度: {confidence}")
-        return encoding
+def convert_encoding_to_utf8(filename):
+    """将文件从GB2312编码转换为UTF-8编码。"""
+    with open(filename, 'r', encoding='gb2312', errors='ignore') as file:
+        content = file.read()
+    with open(filename, 'w', encoding='utf-8', errors='ignore') as file:
+        file.write(content)
 
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""
@@ -46,8 +43,8 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
 
     for filename, groups in file_list:
         print(f"正在处理文件: {filename}")
-        encoding = detect_encoding(filename)
-        with open(filename, 'r', encoding=encoding, errors='ignore') as infile:
+        convert_encoding_to_utf8(filename)  # 转换文件编码为UTF-8
+        with open(filename, 'r', encoding='utf-8', errors='ignore') as infile:
             current_group = None
             for line in infile:
                 if line.startswith("#") or not line.strip():

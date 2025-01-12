@@ -64,7 +64,6 @@ def main():
         ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),  # 保留所有分组  JJ斗地主
         # 出处 https://adultiptv.net/→http://adultiptv.net/chs.m3u
         ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt",None),  # 保留所有分组
-        ("https://ygbh.site/bh.txt", ["💝中国移动ITV👉移动", "💝汕头央卫👉广东", "焦点香港", "💝咪咕频道👉全网", "💝云南有线频道👉全网"]),  # 保留所有分组
     ]
     local_filenames_with_groups = []
 

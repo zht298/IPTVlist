@@ -47,8 +47,9 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                     print(f"找到分组: {current_group}")
                 elif current_group and len(parts) == 2:
                     channel_name, link = parts[0].strip(), parts[1].strip()
-                    if not ipv6_pattern.search(link) and (groups is None or current_group.lower() in [g.lower() for g in groups]):  # 过滤掉IPv6链接和非指定分组
+                    if not ipv6_pattern.search(link) and (groups is None or any(current_group.lower() in g.lower() for g in groups)):  # 过滤掉IPv6链接和非指定分组
                         group_dict[current_group][channel_name].append(link)
+                        print(f"添加频道: {channel_name} 链接: {link} 到分组: {current_group}")
 
     print("合并后的分组名称：")
     for group in group_dict.keys():
@@ -61,6 +62,7 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
             for channel_name, links in channels.items():
                 for link in links[:max_channels_per_name]:
                     outfile.write(f"{channel_name},{link}\n")
+                    print(f"写入频道: {channel_name}, 链接: {link}")
 
 def git_add_files(files, user_name, user_email):
     """将文件添加到Git版本控制中。"""

@@ -2,6 +2,7 @@
 
 import requests
 import re
+from collections import defaultdict
 
 def download_txt_file(url, filename):
     """从URL下载TXT文件并保存在本地。"""
@@ -10,9 +11,9 @@ def download_txt_file(url, filename):
     with open(filename, 'w', encoding='utf-8') as file:
         file.write(response.text)
 
-def merge_txt_files(file_list, output_filename, max_channels_per_group, exclude_groups):
-    """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留频道。"""
-    group_dict = {}
+def merge_txt_files(file_list, output_filename, max_channels_per_name, exclude_groups):
+    """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""
+    group_dict = defaultdict(lambda: defaultdict(list))
     ipv6_pattern = re.compile(r'([a-f0-9:]+:+)+[a-f0-9]+')
 
     for filename in file_list:
@@ -24,19 +25,18 @@ def merge_txt_files(file_list, output_filename, max_channels_per_group, exclude_
                 parts = line.split(',')
                 if len(parts) == 2 and parts[1].startswith('#genre#'):
                     current_group = parts[0]
-                    if current_group not in group_dict:
-                        group_dict[current_group] = []
                 elif current_group and len(parts) == 2:
                     channel_name, link = parts[0], parts[1].strip()
                     if not ipv6_pattern.search(link) and current_group not in exclude_groups:  # 过滤掉IPv6链接和指定分组
-                        group_dict[current_group].append((channel_name, link))
+                        group_dict[current_group][channel_name].append(link)
 
     with open(output_filename, 'w', encoding='utf-8') as outfile:
         for group, channels in group_dict.items():
-            if group not in exclude_groups:  # 再次检查排除的分组
+            if group not in exclude_groups:
                 outfile.write(f"{group},#genre#\n")
-                for channel_name, link in channels[:max_channels_per_group]:
-                    outfile.write(f"{channel_name},{link}\n")
+                for channel_name, links in channels.items():
+                    for link in links[:max_channels_per_name]:
+                        outfile.write(f"{channel_name},{link}\n")
 
 def main():
     txt_urls = [
@@ -55,9 +55,9 @@ def main():
 
     # 步骤2：合并TXT文件并过滤
     output_filename = "merged_output.txt"
-    max_channels_per_group = 10  # 设置每个分组内最多保留的频道数量
+    max_channels_per_name = 10  # 设置每个频道名称最多保留的项数量
     exclude_groups = ["公告", "广东频道", "少儿频道", "港·澳·台", "影视频道"]  # 要过滤掉的分组
-    merge_txt_files(local_filenames, output_filename, max_channels_per_group, exclude_groups)
+    merge_txt_files(local_filenames, output_filename, max_channels_per_name, exclude_groups)
     print(f"已合并文件到：{output_filename}")
 
 if __name__ == "__main__":

@@ -18,12 +18,11 @@ def download_txt_file(url, filename):
                 file.write(response.content)
             return
         except requests.exceptions.SSLError as e:
-            print(f"SSL 错误：{e}")
+            continue
         except requests.exceptions.RequestException as e:
-            print(f"请求错误：{e}")
+            continue
         if attempt < retries - 1:
             time.sleep(3)
-    print(f"无法下载文件：{url}")
 
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""

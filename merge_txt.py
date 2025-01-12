@@ -1,6 +1,7 @@
 import requests
 import re
 from collections import defaultdict
+import unicodedata
 import warnings
 import time
 
@@ -28,9 +29,9 @@ def download_txt_file(url, filename):
             time.sleep(3)
     print(f"无法下载文件：{url}")
 
-def to_bytes(text):
-    """将文本转换为字节集。"""
-    return text.encode('utf-8')
+def normalize_text(text):
+    """标准化文本以进行比较。"""
+    return unicodedata.normalize('NFKC', text).lower()
 
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""
@@ -50,8 +51,8 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                     print(f"找到分组: {current_group}")
                 elif current_group and len(parts) == 2:
                     channel_name, link = parts[0].strip(), parts[1].strip()
-                    current_group_bytes = to_bytes(current_group)
-                    if not ipv6_pattern.search(link) and (groups is None or any(to_bytes(g) == current_group_bytes for g in groups)):  # 过滤掉IPv6链接和非指定分组
+                    normalized_group = normalize_text(current_group)
+                    if not ipv6_pattern.search(link) and (groups is None or any(normalize_text(g) == normalized_group for g in groups)):  # 过滤掉IPv6链接和非指定分组
                         group_dict[current_group][channel_name].append(link)
                         print(f"添加频道: {channel_name} 链接: {link} 到分组: {current_group}")
 

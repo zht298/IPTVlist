@@ -1,3 +1,4 @@
+# 只保留txt视频文件中需要的分组，可处理多个链接
 import requests
 
 def fetch_playlist(url):

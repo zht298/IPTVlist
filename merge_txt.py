@@ -1,3 +1,5 @@
+# 叠加多个txt视频文件，过滤掉ipv6链接，每个分组保留指定频道数
+
 import requests
 import re
 
@@ -37,8 +39,8 @@ def merge_txt_files(file_list, output_filename, max_channels_per_group):
 
 def main():
     txt_urls = [
-        "https://raw.githubusercontent.com/zht298/IPTVlist/refs/heads/main/playlist.txt",
-        "https://raw.githubusercontent.com/zht298/IPTVlist/refs/heads/main/chs.txt",
+        "https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.txt",
+        "https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt",
         # 添加更多的链接
     ]
     local_filenames = []

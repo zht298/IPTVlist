@@ -27,7 +27,7 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                     current_group = parts[0]
                 elif current_group and len(parts) == 2:
                     channel_name, link = parts[0], parts[1].strip()
-                    if not ipv6_pattern.search(link) and current_group in groups:  # 过滤掉IPv6链接和非指定分组
+                    if not ipv6_pattern.search(link) and (groups is None or current_group in groups):  # 过滤掉IPv6链接和非指定分组
                         group_dict[current_group][channel_name].append(link)
 
     with open(output_filename, 'w', encoding='utf-8') as outfile:
@@ -39,11 +39,11 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
 
 def main():
     txt_urls_with_groups = [
-        ("https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.txt", ["体育频道", "新闻频道"]),
-        
+        ("https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.txt", ["央视频道", "卫视频道","影视频道"]),
+        # ("", None),  # 保留所有分组
         ("https://raw.githubusercontent.com/chuzjie/wuihui/refs/heads/main/%E5%B0%8F%E7%B1%B3/DSJ240101.txt", ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道","韩国频道"]),      
-        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", ["游戏频道"]),
-        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt", ["央视频道", "电影频道"]),
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),  # 保留所有分组
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt",None),  # 保留所有分组
         # 添加更多的链接和对应的分组
     ]
     local_filenames_with_groups = []

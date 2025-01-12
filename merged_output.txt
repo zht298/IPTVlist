@@ -1,4 +1,3 @@
-公告,#genre#
 央视频道,#genre#
 CCTV1,http://ottrrs.hl.chinamobile.com/PLTV/88888888/224/3221226016/index.m3u8$LR•IPV4『线路73』
 CCTV1,http://tv.kmhlzxs.top:35455/gaoma/cctv1.m3u8$LR•IPV4『线路75』

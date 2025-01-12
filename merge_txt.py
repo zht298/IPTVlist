@@ -41,6 +41,7 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name, exclude_g
 def main():
     txt_urls = [
         "https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.txt",
+        "https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt",
         "https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt",
         # 添加更多的链接
     ]

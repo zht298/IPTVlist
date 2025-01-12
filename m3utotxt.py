@@ -93,11 +93,11 @@ def process_m3u_urls(m3u_urls):
 def main():
     """主函数，定义M3U URL并处理它们。"""
     m3u_urls = [
-        {
-            "url": "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u",
-            # "rename_groups": {"💞央视频道": "央视"},
-            # "rename_channel": {"CCTV1 综合": " 综合"},
-        },
+       #  {
+       #      "url": "https://raw.githubusercontent.com/zht298/IPTVlist/main/playlist.m3u",
+       #      "rename_groups": {"💞央视频道": "央视"},
+       #      "rename_channel": {"CCTV1 综合": " 综合"},
+       #  },
         {
             "url": "http://adultiptv.net/chs.m3u",
             "default_group": "成人直播_9",

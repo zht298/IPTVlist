@@ -5,18 +5,26 @@ import re
 from collections import defaultdict
 import os
 import subprocess
+import time
 
 def download_txt_file(url, filename):
     """从URL下载TXT文件并保存在本地。"""
-    try:
-        response = requests.get(url, verify=False)  # 绕过 SSL 验证
-        response.raise_for_status()
-        with open(filename, 'w', encoding='utf-8') as file:
-            file.write(response.text)
-    except requests.exceptions.SSLError as e:
-        print(f"SSL 错误：{e}")
-    except requests.exceptions.RequestException as e:
-        print(f"请求错误：{e}")
+    retries = 3
+    for attempt in range(retries):
+        try:
+            response = requests.get(url, verify=False)  # 绕过 SSL 验证
+            response.raise_for_status()
+            with open(filename, 'w', encoding='utf-8') as file:
+                file.write(response.text)
+            return
+        except requests.exceptions.SSLError as e:
+            print(f"SSL 错误：{e}")
+        except requests.exceptions.RequestException as e:
+            print(f"请求错误：{e}")
+        if attempt < retries - 1:
+            print("等待3秒后重试...")
+            time.sleep(3)
+    print(f"无法下载文件：{url}")
 
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""
@@ -52,16 +60,16 @@ def git_add_files(files):
 
 def main():
     txt_urls_with_groups = [
-        # ("https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.txt", ["央视频道", "卫视频道","影视频道"]),
+        ("https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.txt", ["央视频道", "卫视频道","影视频道"]),
         # 出处 月光宝盒抓取直播
         ("https://ygbh.site/bh.txt", ["💝中国移动ITV👉移动","💝汕头央卫👉广东"]),  # 保留所有分组
         # 小苹果，蜗牛线路[测试2]
-        # ("http://wp.wadg.pro/down.php/d7b52d125998d00e2d2339bac6abd2b5.txt", ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道","韩国频道"]),      
-        # ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", None),  # 保留所有分组  大连台
+        ("http://wp.wadg.pro/down.php/d7b52d125998d00e2d2339bac6abd2b5.txt", ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道","韩国频道"]),      
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", None),  # 保留所有分组  大连台
         # 出处 小鹦鹉等多处获取 
-        # ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),  # 保留所有分组  JJ斗地主
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),  # 保留所有分组  JJ斗地主
         # 出处 https://adultiptv.net/→http://adultiptv.net/chs.m3u
-        # ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt",None),  # 保留所有分组
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt",None),  # 保留所有分组
         # 添加更多的链接和对应的分组
     ]
     local_filenames_with_groups = []

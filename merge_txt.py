@@ -1,7 +1,7 @@
 import requests
 import re
+import unicodedata
 from collections import defaultdict
-import subprocess
 import warnings
 import time
 
@@ -29,6 +29,10 @@ def download_txt_file(url, filename):
             time.sleep(3)
     print(f"无法下载文件：{url}")
 
+def normalize_text(text):
+    """标准化文本以进行比较。"""
+    return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('ascii').lower()
+
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""
     group_dict = defaultdict(lambda: defaultdict(list))
@@ -47,7 +51,8 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                     print(f"找到分组: {current_group}")
                 elif current_group and len(parts) == 2:
                     channel_name, link = parts[0].strip(), parts[1].strip()
-                    if not ipv6_pattern.search(link) and (groups is None or any(current_group.lower() in g.lower() for g in groups)):  # 过滤掉IPv6链接和非指定分组
+                    normalized_group = normalize_text(current_group)
+                    if not ipv6_pattern.search(link) and (groups is None or any(normalize_text(g) == normalized_group for g in groups)):  # 过滤掉IPv6链接和非指定分组
                         group_dict[current_group][channel_name].append(link)
                         print(f"添加频道: {channel_name} 链接: {link} 到分组: {current_group}")
 
@@ -64,30 +69,9 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                     outfile.write(f"{channel_name},{link}\n")
                     print(f"写入频道: {channel_name}, 链接: {link}")
 
-def git_add_files(files, user_name, user_email):
-    """将文件添加到Git版本控制中。"""
-    # 设置用户信息
-    subprocess.run(["git", "config", "user.name", user_name])
-    subprocess.run(["git", "config", "user.email", user_email])
-    
-    for file in files:
-        subprocess.run(["git", "add", file])
-    subprocess.run(["git", "commit", "-m", "Add new downloaded files"])
-    subprocess.run(["git", "push"])
-
 def main():
     txt_urls_with_groups = [
-        # ("https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.txt", ["央视频道", "卫视频道","影视频道"]),
-        # 出处 月光宝盒抓取直播
         ("https://ygbh.site/bh.txt", ["💝中国移动ITV👉移动","💝汕头央卫👉广东","焦点香港"]),  # 保留所有分组
-        # 小苹果，蜗牛线路[测试2]
-        # ("http://wp.wadg.pro/down.php/d7b52d125998d00e2d2339bac6abd2b5.txt", ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道","韩国频道"]),      
-        # ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", None),  # 保留所有分组  大连台
-        # 出处 小鹦鹉等多处获取 
-        # ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),  # 保留所有分组  JJ斗地主
-        # 出处 https://adultiptv.net/→http://adultiptv.net/chs.m3u
-        # ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt",None),  # 保留所有分组
-        # 添加更多的链接和对应的分组
     ]
     local_filenames_with_groups = []
 
@@ -101,11 +85,6 @@ def main():
     output_filename = "merged_output.txt"
     max_channels_per_name = 10  # 设置每个频道名称最多保留的项数量
     merge_txt_files(local_filenames_with_groups, output_filename, max_channels_per_name)
-
-    # 步骤3：添加文件到Git版本控制中
-    user_name = "zht298"
-    user_email = "zht19886@gmail.com"
-    git_add_files([f"file{i}.txt" for i in range(1, len(txt_urls_with_groups) + 1)] + ["merged_output.txt"], user_name, user_email)
 
 if __name__ == "__main__":
     main()

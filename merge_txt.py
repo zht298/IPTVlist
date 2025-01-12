@@ -1,5 +1,4 @@
-# 叠加多个txt视频文件，过滤掉ipv6链接，每个分组保留指定频道数
-
+# 叠加多个txt视频文件，过滤掉ipv6链接，过滤掉不需要的分组，每个分组保留指定频道数
 import requests
 import re
 
@@ -10,7 +9,7 @@ def download_txt_file(url, filename):
     with open(filename, 'w', encoding='utf-8') as file:
         file.write(response.text)
 
-def merge_txt_files(file_list, output_filename, max_channels_per_group):
+def merge_txt_files(file_list, output_filename, max_channels_per_group, exclude_groups):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留频道。"""
     group_dict = {}
     ipv6_pattern = re.compile(r'([a-f0-9:]+:+)+[a-f0-9]+')
@@ -28,7 +27,7 @@ def merge_txt_files(file_list, output_filename, max_channels_per_group):
                         group_dict[current_group] = []
                 elif current_group and len(parts) == 2:
                     channel_name, link = parts[0], parts[1].strip()
-                    if not ipv6_pattern.search(link):  # 过滤掉IPv6链接
+                    if not ipv6_pattern.search(link) and current_group not in exclude_groups:  # 过滤掉IPv6链接和指定分组
                         group_dict[current_group].append((channel_name, link))
 
     with open(output_filename, 'w', encoding='utf-8') as outfile:
@@ -55,7 +54,8 @@ def main():
     # 步骤2：合并TXT文件并过滤
     output_filename = "merged_output.txt"
     max_channels_per_group = 10  # 设置每个分组内最多保留的频道数量
-    merge_txt_files(local_filenames, output_filename, max_channels_per_group)
+    exclude_groups = ["公告"]  # 要过滤掉的分组
+    merge_txt_files(local_filenames, output_filename, max_channels_per_group, exclude_groups)
     print(f"已合并文件到：{output_filename}")
 
 if __name__ == "__main__":

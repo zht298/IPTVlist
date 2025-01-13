@@ -51,12 +51,17 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
 
 def main():
     txt_urls_with_groups = [
-        ("https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.txt", ["央视频道", "卫视频道", "影视频道"]),
-        ("https://raw.githubusercontent.com/zht298/IPTVlist/refs/heads/main/ygbh.txt", None),
-        ("http://wp.wadg.pro/down.php/d7b52d125998d00e2d2339bac6abd2b5.txt", ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道", "韩国频道"]),
-        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", None),
-        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),
-        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt", None),
+        ("https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.txt", ["央视频道", "卫视频道","影视频道"]),
+        # 出处 月光宝盒抓取直播
+        # ("https://ygbh.site/bh.txt", ["💝中国移动ITV👉移动"]),  # 保留所有分组
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/refs/heads/main/ygbh.txt", None),  # 精简排序后的月光宝盒
+        # 小苹果，蜗牛线路[测试2]
+        ("http://wp.wadg.pro/down.php/d7b52d125998d00e2d2339bac6abd2b5.txt", ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道","韩国频道"]),      
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", None),  # 保留所有分组  大连台
+        # 出处 小鹦鹉等多处获取 
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),  # 保留所有分组  JJ斗地主
+        # 出处 https://adultiptv.net/→http://adultiptv.net/chs.m3u
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt",None),  # 保留所有分组
     ]
     local_filenames_with_groups = []
 

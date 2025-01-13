@@ -72,7 +72,7 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
 def main():
     txt_urls_with_groups = [
         ("https://raw.githubusercontent.com/zht298/IPTVlist/refs/heads/main/ygbh.txt", None), 
-        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", None),  # 保留所有分组  大连台
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", ["大连综合"]),  # 保留大连综合分组  大连台
     ]
     local_filenames_with_groups = []
 

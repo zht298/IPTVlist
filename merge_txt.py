@@ -1,5 +1,5 @@
+# 将多个TXT文件合并成一个文件，并过滤掉包含 'ipv6' 的行，按指定数量保留分组内相同频道数量，保留指定的分组
 import requests
-import re
 from collections import defaultdict
 import warnings
 import time

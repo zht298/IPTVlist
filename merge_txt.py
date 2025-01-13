@@ -16,10 +16,13 @@ def download_txt_file(url, filename):
             response.raise_for_status()
             with open(filename, 'wb') as file:
                 file.write(response.content)
+            print(f"Downloaded content from {url} to {filename}")  # 打印下载成功信息
             return
         except requests.exceptions.SSLError as e:
+            print(f"SSL Error while downloading {url}: {e}")
             continue
         except requests.exceptions.RequestException as e:
+            print(f"Request Error while downloading {url}: {e}")
             continue
         if attempt < retries - 1:
             time.sleep(3)
@@ -30,6 +33,7 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
     ipv6_pattern = re.compile(r'([a-f0-9:]+:+)+[a-f0-9]+')
 
     for filename, groups in file_list:
+        print(f"Processing file: {filename}")  # 打印正在处理的文件名
         with open(filename, 'r', encoding='utf-8', errors='ignore') as infile:
             for line in infile:
                 if line.startswith("#") or not line.strip():
@@ -43,13 +47,16 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                     if not ipv6_pattern.search(link):
                         if groups is None or current_group in groups:
                             group_dict[current_group][channel_name].append(link)
+                            print(f"Added {channel_name}: {link} to group {current_group}")  # 打印已添加信息
 
+    print(f"Group dictionary: {group_dict}")  # 打印合并后的字典
     with open(output_filename, 'w', encoding='utf-8') as outfile:
         for group, channels in group_dict.items():
             outfile.write(f"{group},#genre#\n")
             for channel_name, links in channels.items():
                 for link in links[:max_channels_per_name]:
                     outfile.write(f"{channel_name},{link}\n")
+    print(f"Merged output written to {output_filename}")  # 打印合并成功信息
 
 def main():
     txt_urls_with_groups = [

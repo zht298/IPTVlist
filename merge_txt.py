@@ -30,7 +30,8 @@ def download_txt_file(url, filename):
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""
     group_dict = defaultdict(lambda: defaultdict(list))
-    ipv6_pattern = re.compile(r'([a-f0-9:]+:+)+[a-f0-9]+')
+    # 修正后的IPv6正则表达式
+    ipv6_pattern = re.compile(r'\b(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\b')
 
     for filename, groups in file_list:
         print(f"Processing file: {filename}, groups: {groups}")  # 打印正在处理的文件名和分组

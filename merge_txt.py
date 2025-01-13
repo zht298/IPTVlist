@@ -35,15 +35,22 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
     for filename, groups in file_list:
         print(f"Processing file: {filename}")  # 打印正在处理的文件名
         with open(filename, 'r', encoding='utf-8', errors='ignore') as infile:
+            content = infile.read()
+            print(f"Content of {filename}:\n{content}\n")  # 打印文件内容
+            infile.seek(0)  # 重置文件指针到开头
+            current_group = None
             for line in infile:
+                print(f"Processing line: {line.strip()}")  # 打印每一行内容
                 if line.startswith("#") or not line.strip():
                     continue
                 parts = line.split(',')
+                print(f"Split parts: {parts}")  # 打印分割后的部分
                 if len(parts) == 2 and parts[1].startswith('#genre#'):
                     current_group = parts[0].strip()
-                    print(f"Current group: {current_group}")  # 打印current_group
+                    print(f"Current group set to: {current_group}")  # 打印current_group
                 elif current_group and len(parts) == 2:
                     channel_name, link = parts[0].strip(), parts[1].strip()
+                    print(f"Found channel: {channel_name}, link: {link}")  # 打印频道和链接
                     if not ipv6_pattern.search(link):
                         if groups is None or current_group in groups:
                             group_dict[current_group][channel_name].append(link)

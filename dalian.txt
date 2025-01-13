@@ -2,3 +2,5 @@
 大连综合,http://live.dltv.cn/tcb3IB5/l7tdb0I.m3u8
 大连生活,http://live.dltv.cn/JzcFkF4/o4Jdc0k.m3u8
 大连文体,http://live.dltv.cn/hxT7Fc3/4omdT0F.m3u8
+大连地方,#genre#
+大连综合,http://live.dltv.cn/tcb3IB5/l7tdb0I.m3u8

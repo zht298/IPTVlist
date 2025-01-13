@@ -1,9 +1,6 @@
 name: 下载并合并TXT文件
 
 on:
-  push:
-    branches:
-      - main
   schedule:
     - cron: '0 3 * * *'  # 每天北京时间上午11点运行
   workflow_dispatch:  # 允许手动触发

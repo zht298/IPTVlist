@@ -30,8 +30,7 @@ def download_txt_file(url, filename):
 def merge_txt_files(file_list, output_filename, max_channels_per_name):
     """将多个TXT文件合并成一个文件，并过滤掉IPv6地址及按指定数量保留每个频道名称的项。"""
     group_dict = defaultdict(lambda: defaultdict(list))
-    # 使用更准确的正则表达式来匹配IPv6地址
-    ipv6_pattern = re.compile(r'\b(?:[a-f0-9]{1,4}:){7}[a-f0-9]{1,4}\b')
+    ipv6_pattern = re.compile(r'([a-f0-9:]+:+)+[a-f0-9]+')
 
     for filename, groups in file_list:
         print(f"Processing file: {filename}, groups: {groups}")  # 打印正在处理的文件名和分组
@@ -73,7 +72,7 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
 def main():
     txt_urls_with_groups = [
         ("https://raw.githubusercontent.com/zht298/IPTVlist/refs/heads/main/ygbh.txt", None), 
-        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", ["大连综合"]),  # 保留大连综合分组  大连台
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", ["大连"]),  # 保留大连分组
     ]
     local_filenames_with_groups = []
 

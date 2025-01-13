@@ -31,13 +31,13 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
 
     for filename, groups in file_list:
         with open(filename, 'r', encoding='utf-8', errors='ignore') as infile:
-            current_group = None
             for line in infile:
                 if line.startswith("#") or not line.strip():
                     continue
                 parts = line.split(',')
                 if len(parts) == 2 and parts[1].startswith('#genre#'):
                     current_group = parts[0].strip()
+                    print(f"Current group: {current_group}")  # 打印current_group
                 elif current_group and len(parts) == 2:
                     channel_name, link = parts[0].strip(), parts[1].strip()
                     if not ipv6_pattern.search(link):
@@ -59,12 +59,12 @@ def main():
         ("https://raw.githubusercontent.com/zht298/IPTVlist/refs/heads/main/ygbh.txt", None), 
         # 小苹果，蜗牛线路[测试2]
         # ("http://wp.wadg.pro/down.php/d7b52d125998d00e2d2339bac6abd2b5.txt",
-        # ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道","韩国频道"]),      
+        #  ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道","韩国频道"]),      
         ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", None),  # 保留所有分组  大连台
         # 出处 小鹦鹉等多处获取 
         ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),  # 保留所有分组  JJ斗地主
         # 出处 https://adultiptv.net/→http://adultiptv.net/chs.m3u
-        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt",None),  # 保留所有分组
+        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt", None),  # 保留所有分组
     ]
     local_filenames_with_groups = []
 

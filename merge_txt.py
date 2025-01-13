@@ -33,7 +33,7 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
     ipv6_pattern = re.compile(r'([a-f0-9:]+:+)+[a-f0-9]+')
 
     for filename, groups in file_list:
-        print(f"Processing file: {filename}")  # 打印正在处理的文件名
+        print(f"Processing file: {filename}, groups: {groups}")  # 打印正在处理的文件名和分组
         with open(filename, 'r', encoding='utf-8', errors='ignore') as infile:
             content = infile.read()
             print(f"Content of {filename}:\n{content}\n")  # 打印文件内容
@@ -55,6 +55,10 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
                         if groups is None or current_group in groups:
                             group_dict[current_group][channel_name].append(link)
                             print(f"Added {channel_name}: {link} to group {current_group}")  # 打印已添加信息
+                        else:
+                            print(f"Skipped {channel_name} in group {current_group} (not in specified groups)")
+                    else:
+                        print(f"Skipped {channel_name} due to IPv6 address: {link}")
 
     print(f"Group dictionary: {group_dict}")  # 打印合并后的字典
     with open(output_filename, 'w', encoding='utf-8') as outfile:
@@ -67,18 +71,8 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
 
 def main():
     txt_urls_with_groups = [
-        # ("https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.txt", ["央视频道", "卫视频道","影视频道"]),
-        # 出处 月光宝盒抓取直播
-        # ("https://ygbh.site/bh.txt", ["💝中国移动ITV👉移动","💝汕头央卫👉广东"]),  # 保留所有分组
         ("https://raw.githubusercontent.com/zht298/IPTVlist/refs/heads/main/ygbh.txt", None), 
-        # 小苹果，蜗牛线路[测试2]
-        # ("http://wp.wadg.pro/down.php/d7b52d125998d00e2d2339bac6abd2b5.txt",
-        #  ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道","韩国频道"]),      
         ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", None),  # 保留所有分组  大连台
-        # 出处 小鹦鹉等多处获取 
-        # ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),  # 保留所有分组  JJ斗地主
-        # 出处 https://adultiptv.net/→http://adultiptv.net/chs.m3u
-        # ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt", None),  # 保留所有分组
     ]
     local_filenames_with_groups = []
 

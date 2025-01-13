@@ -30,9 +30,11 @@ def merge_txt_files(file_list, output_filename, max_channels_per_name):
     ipv6_pattern = re.compile(r'([a-f0-9:]+:+)+[a-f0-9]+')
 
     for filename, groups in file_list:
+        print(f"Reading file: {filename}")  # 打印文件名
         with open(filename, 'r', encoding='utf-8', errors='ignore') as infile:
             current_group = None
             for line in infile:
+                print(line.strip())  # 打印每一行内容
                 if line.startswith("#") or not line.strip():
                     continue
                 parts = line.split(',')
@@ -58,7 +60,7 @@ def main():
         # ("https://ygbh.site/bh.txt", ["💝中国移动ITV👉移动","💝汕头央卫👉广东"]),  # 保留所有分组
         ("https://raw.githubusercontent.com/zht298/IPTVlist/refs/heads/main/ygbh.txt", None), 
         # 小苹果，蜗牛线路[测试2]
-        # ("http://wp.wadg.pro/down.php/d7b52d125998d00e2d2339bac6abd2b5.txt", ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道","韩国频道"]),      
+        # ("http://wp.wadg.pro/down.php/d7b52d125998d00e2d2339bac6abd2b5.txt",    
         ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", None),  # 保留所有分组  大连台
         # 出处 小鹦鹉等多处获取 
         ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),  # 保留所有分组  JJ斗地主

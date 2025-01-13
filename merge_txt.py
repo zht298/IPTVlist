@@ -76,9 +76,9 @@ def main():
         #  ["央视频道①", "💞央视频道", "卫视频道①", "📡卫视频道","韩国频道"]),      
         ("https://raw.githubusercontent.com/zht298/IPTVlist/main/dalian.txt", None),  # 保留所有分组  大连台
         # 出处 小鹦鹉等多处获取 
-        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),  # 保留所有分组  JJ斗地主
+        # ("https://raw.githubusercontent.com/zht298/IPTVlist/main/JJdoudizhu.txt", None),  # 保留所有分组  JJ斗地主
         # 出处 https://adultiptv.net/→http://adultiptv.net/chs.m3u
-        ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt", None),  # 保留所有分组
+        # ("https://raw.githubusercontent.com/zht298/IPTVlist/main/chs.txt", None),  # 保留所有分组
     ]
     local_filenames_with_groups = []
 
